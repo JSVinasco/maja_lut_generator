@@ -1,8 +1,10 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import numpy as na
 import sys
+
+import numpy as na
+
 
 def param(site):
 

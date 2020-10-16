@@ -72,7 +72,7 @@ elif sat == 'S2B':
     import param_luts_S2B as param_luts
 elif sat == 'VENUS':
     #path_out = '/home/colinj/code/luts_init/OUTPUTS/'
-    import param_luts_Venus as param_luts
+    import resources.param_luts_Venus as param_luts
 elif sat == 'LANDSAT5':
     #path_out = None
     import param_luts_LANDSAT5 as param_luts
