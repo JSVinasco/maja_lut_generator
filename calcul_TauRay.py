@@ -50,7 +50,7 @@ else :
 # ;---------------------------------------------------------------------------
 nb_bandes=int(options.nbands)
 sat=options.satellite
-lib_spectra = "/home/colinj/code/luts_init/lib_spectra_v20201016" # TODO: settings
+lib_spectra = "%s/resources/lib_spectra" % (os.path.dirname(os.path.realpath(__file__))) # TODO: settings
 
 if options.tab_delimiter :
     delim='\t'
