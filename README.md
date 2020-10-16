@@ -15,17 +15,29 @@ WARNING: The location of SOS code must be specified in an environment variable `
 
 `export SOS_RACINE="/path/to/SOS/"`
 
-## 2. Structure
+## 2. Tools
 ### 2.1 Compute per band extinction coefficients with `calcul_TauRay.py` 
 #### Requires :
 - a band filter function : see `resources/lib_spectra/`
 - extra-terrestrial solar irradiance : see `resources/Thuillier_2012.dat`
 
-#### Outputs : TODO: check units
+#### Outputs : TODO: check units -> µm-1 ?
 - l_equiv : equivalent radiance (W/m²/sr)
 - l_equiv_aero : equivalent radiance (W/m²/sr)
 - l_equiv_ray : equivalent radiance (W/m²/sr)
 - Tau_Ray : optical depth for Rayleigh (-)
+
+### Command line :
+
+`python calcul_TauRay.py -s <SENSOR> -n <N> -i <IRRADIANCE> -t
+`
+
+With: 
+- `SENSOR` : path to rep6S file for satellite in the form SATELLITE/SENSOR as in `resources/lib_spectra/`, eg. `VENUS/VSSC`
+- `N` : number of bands
+- `IRRADIANCE` : path to irradiance file, eg. `resources/Thuillier_2012.dat`
+
+`-t` option outputs with as tab separator
 
 ### 2.2 Generate the LUTs with `luts_V51.py` 
 Main program to generate a LUT for a given sensor, aerosol model, aerosol concentration volume and band id. 
