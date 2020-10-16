@@ -8,7 +8,7 @@ import glob
 from math import *
 import numpy as na
 import sys
-from lib_SOS_V51 import *
+from lib.lib_SOS_V51 import *
     
 #====================================================================
 #     Calcul de pression atmospherique en fonction de l'altitude
