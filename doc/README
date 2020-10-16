@@ -1,0 +1,38 @@
+#=======================
+#     CONFIGURATION
+#=======================
+
+ - luts_V51.py : configurer les variables "path_out" et "SOS_RESULT" (ligne 157)
+
+ - trace_luts_V51.py : configurer les variables "path_out" et "rep"
+
+#===========================
+#     RUNS EN PARALLELE
+#===========================
+Lors de la creation d'une LUT, un meme fichier temporaire ("FICOS_TRANSM_TMP") est ecrit dans le repertoire courant, lu puis supprime. Il est donc impossible de lancer la creation de plusieurs LUTs en meme temps.
+Chaque ligne de lance_luts_S2A.bash (idem pour lance_luts_S2B.bash, lance_luts_VENUS.bash et lance_luts_LANDSAT8.bash), doit donc etre lancee depuis un repertoire different.
+
+#==================
+#     AEROSOLS
+#==================
+Les infos concernant les proprietes optiques des aerosols (indices de refraction, rayons modaux, dependance a l'humidite relative, ...) sont disponibles dans le dossier :
+
+            *******************
+     =====> PROPRIETES_OPTIQUES
+            *******************
+
+
+Dust, BlackCarbon, Sulfate, OrganicMatter, Ammonium et Nitrate ont un mode coarse nul :
+  prop = proportion de grosses particules = 0.0
+
+SeaSalt a un mode coarse non nul et est donc le seul modele bimodal : on veut le definir sous la forme de concentrations volumiques au lieu de proportion d'AOT :
+  CVfine = volumic concentration [m-3] fine mode = 70
+  CVcoarse = volumic concentration [m-3] coarse mode = 3
+Pour gerer cela il a fallu modifier l'interface lib_SOS_V51.py :
+    - AER.BMD.VCdef = 1, au lieu de 2. Permet de dire qu'on donne les "volumic concentrations" au lieu de la proportion d'AOT coarse.
+     - ajout de AER.BMD.CoarseVC et AER.BMD.FineVC et suppression de AER.BMD.RAOT : voir page 102 du manuel utilisateur des OS.
+
+Les proprietes optiques proviennent du cycle 46r1 de CAMS, a l'exception des indices de refraction de :
+ - BlackCarbon : CAMS cycle41r1 utilise n = 1.75 - 0.45i
+                 Mais on utilise        n = 1.75 - 0.20i
+

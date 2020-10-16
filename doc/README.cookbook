@@ -1,0 +1,67 @@
+########################################
+# Step 1: check settings per sensor
+########################################
+
+Optical settings are defined in:
+
+param_luts_formosat.py  param_luts_LANDSAT7.py  param_luts_RAPIDEYE.py  param_luts_S2B.py  param_luts_SPOT4.py        param_luts_SPOT5_TAKE5.py
+param_luts_LANDSAT5.py  param_luts_LANDSAT8.py  param_luts_S2A.py       param_luts_S2.py   param_luts_SPOT4_TAKE5.py  param_luts_Venus.py
+
+WARNING: imaginery part of the refractive index was tuned for testing, check mi_f for Black Carbon and Organic Matter
+
+To compute thauRay (optical depth for Rayleigh, per band), use the dedicated script, eg.:
+python calcul_TauRay.py -s VENUS/VSSC -n 12 -i Thuillier_2012.dat -t
+
+The path to sensor spectral response is hardcoded and points to ~Hagolle/ on s2calc.
+
+########################################
+# Step 2: check LUT settings and dimensions
+########################################
+
+In luts_V51.py, dimensions are defined such that:
+
+liste_theta_s   = na.linspace(0,75,11)         # Left unchanged
+liste_delta_phi = na.linspace(0,180,7)         # Left unchanged
+liste_altitude  = na.arange(0,3100,1000)       # Left unchanged
+ep_opt          = na.linspace(0,1.5,25)        # Here we happened the usual 0.0 to 1.5 range of tau to
+ep_opt          = na.append(ep_opt,[2.0,3.0])  # extend to 2.0 and 3.0, such that final length is 27
+liste_rsurf     = na.linspace(0,1.3,17)        # Left unchanged
+
+Adapt your output directories names like eg.
+
+elif sat == 'S2A':
+    path_out = 'DONNEES/LUTS/CAMScycle46R1_bc10_OMlow/S2A/'
+    import param_luts_S2A as param_luts
+
+########################################
+# Step 3: launch
+########################################
+
+As mentioned in the README, one cannot launch jobs in // in the same directory.
+
+Go to ~/LANCEMENT_LUTS/, you'll find one directory per aerosol, per band and optionally per relative humidity, containing a 'run.sh' bash script like
+
+sat=S2A
+aerosol=BlackCarbon_CAMS
+prop=0.0
+python /mnt/data/home/colinj/luts_os/luts_V51.py $sat $aerosol $prop 0 >${sat}_${aerosol}_0.log
+
+WARNING: you may need to change the path in run.sh to suit your needs
+
+You can launch a bunch of such scripts with a loop like
+
+for i in $(ls -d SENTINEL2A_OrganicMatter_RH95_CAMS_bande*); do nohup bash $i/run.sh &> nohup_$i.out& done
+
+Keep track of jobs with the command 'jobs' or 'htop'
+
+########################################
+# Step 4: get the outputs
+########################################
+
+Final outputs are stored in 
+
+/mnt/data/home/colinj/DONNEES/LUTS
+
+The actual directory name is defined in luts_V51.py
+
+NOTE: you may move or link (or mix both) your LUTs to the main LUT repository
